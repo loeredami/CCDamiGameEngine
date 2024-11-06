@@ -1,4 +1,4 @@
-local GameEngine = require("/lib/GameEngine")
+local GameEngine = require("/lib/GameEngine").GameEngine
 
 local pongGame = GameEngine.new()
 

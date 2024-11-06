@@ -18,6 +18,112 @@ local colourMap = {
 }
 local GameEngine = {}
 
+-- utility classes
+local Vector3 = {}
+local Vector2 = {}
+
+function Vector3.new(x, y, z) 
+    local vector3 = {
+        x = x,
+        y = y,
+        z = z
+    }
+    return vector3
+end
+
+function Vector2.new(x, y) 
+    local vector2 = {
+        x = x,
+        y = y
+    }
+
+    return vector2
+end
+
+-- Pseudo 2.5D Classic Doom like Renderer (uncoloured)
+local P25DCDRenderer = {}
+
+function P25DCDRenderer.new() 
+    local WallGrid = {}
+    local Object2D = {}
+    local Camera = {}
+    
+    
+    function Camera.new(position, angle)
+        local camera = {
+            position = position,
+            angle = angle
+        }
+
+        return camera
+    end
+
+    function WallGrid.new(size, color) 
+        local wall_grid = {
+            color = color,
+            grid = {}
+        }
+
+        for _ = 1, size.x, 1 do
+            local row = {}
+            for _ = 1, size.y, 1 do 
+                table.insert(row, false)
+            end
+            table.insert(wall_grid.grid, row)
+        end
+
+        function wall_grid.set(position, is_wall)
+            wall_grid.grid[position.x][position.y] = is_wall
+        end
+
+        function wall_grid.render(camera, screen) 
+            
+        end
+
+        return wall_grid
+    end
+
+    function Object2D.new(position, texture)
+        local object = {
+            texture = texture,
+            position = position
+        }
+
+        function object.renderScaled(screen_position, scale) 
+
+        end
+
+        return object
+    end
+    
+    local renderer = {
+        objects2D = {Object2D.new(Vector2.new(5, 5), {
+            width=5,
+            height=5,
+            lines = {
+                "-545-",
+                "54445",
+                "44444",
+                "54445",
+                "-545-"
+            }
+        })},
+        wall_grid = WallGrid.new(Vector2.new(10, 10), "5"),
+        RenderObject = {
+            WallGrid = WallGrid,
+            Object2D = Object2D,
+            Camera = Camera
+        }
+    }
+
+    function renderer.render(camera, screen) 
+        renderer.wall_grid.render()
+    end
+
+
+    return renderer
+end
+
 function GameEngine.new()
     local game = {
         updateFunctions = {},
@@ -175,4 +281,10 @@ function GameEngine.new()
     return game
 end
 
-return GameEngine
+return {
+    Version =  "1.0",
+    GameEngine = GameEngine,
+    Renderers = {
+        P25DCDRenderer = P25DCDRenderer
+    }
+}
